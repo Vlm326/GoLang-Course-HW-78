@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  collector:
+    build:
+      context: .
+      dockerfile: Dockerfile.collector
+    environment:
+      COLLECTOR_ADDRESS: ":50051"
+    ports:
+      - "50051:50051"
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.api-gateway
+    environment:
+      API_GATEWAY_ADDRESS: ":8080"
+      COLLECTOR_GRPC_ADDRESS: "collector:50051"
+    depends_on:
+      - collector
+    ports:
+      - "8080:8080"
